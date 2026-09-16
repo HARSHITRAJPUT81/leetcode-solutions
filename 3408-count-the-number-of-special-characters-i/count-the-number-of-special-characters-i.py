@@ -1,0 +1,18 @@
+class Solution:
+    def numberOfSpecialChars(self, word):
+        lower = set()
+        upper = set()
+
+        for ch in word:
+            if ch.islower():
+                lower.add(ch)
+            else:
+                upper.add(ch)
+
+        count = 0
+
+        for ch in lower:
+            if ch.upper() in upper:
+                count += 1
+
+        return count
