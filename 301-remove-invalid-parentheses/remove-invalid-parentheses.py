@@ -1,41 +1,51 @@
-from collections import deque
-
 class Solution:
-    def removeInvalidParentheses(self, s: str):
-        def isValid(string):
-            balance = 0
+    def removeInvalidParentheses(self, s):
+        def is_valid(string):
+            count = 0
+
             for ch in string:
                 if ch == '(':
-                    balance += 1
+                    count += 1
                 elif ch == ')':
-                    if balance == 0:
+                    count -= 1
+
+                    if count < 0:
                         return False
-                    balance -= 1
-            return balance == 0
 
-        res = []
-        visited = set([s])
-        q = deque([s])
-        found = False
+            return count == 0
 
-        while q:
-            cur = q.popleft()
+        # BFS
+        queue = {s}
+        visited = {s}
 
-            if isValid(cur):
-                res.append(cur)
-                found = True
+        while queue:
+            valid = []
 
-            if found:
-                continue
+            # Check current level
+            for string in queue:
+                if is_valid(string):
+                    valid.append(string)
 
-            for i in range(len(cur)):
-                if cur[i] not in "()":
-                    continue
+            # If valid strings are found,
+            # they required minimum removals
+            if valid:
+                return valid
 
-                nxt = cur[:i] + cur[i + 1:]
+            # Generate next level
+            next_level = set()
 
-                if nxt not in visited:
-                    visited.add(nxt)
-                    q.append(nxt)
+            for string in queue:
+                for i in range(len(string)):
+                    # Only remove parentheses
+                    if string[i] not in "()":
+                        continue
 
-        return res
+                    new_string = string[:i] + string[i + 1:]
+
+                    if new_string not in visited:
+                        visited.add(new_string)
+                        next_level.add(new_string)
+
+            queue = next_level
+
+        return [""]
