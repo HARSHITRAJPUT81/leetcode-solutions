@@ -1,37 +1,20 @@
 class Solution:
     def totalNumbers(self, digits):
-        count = 0
+        nums = set()
+        n = len(digits)
 
-        for num in range(100, 1000):
-            # Must be even
-            if num % 2 != 0:
-                continue
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    if i == j or j == k or i == k:
+                        continue
 
-            # Get its three digits
-            a = num // 100
-            b = (num // 10) % 10
-            c = num % 10
+                    if digits[i] == 0:
+                        continue
 
-            # Count required digits
-            need = [0] * 10
-            need[a] += 1
-            need[b] += 1
-            need[c] += 1
+                    num = digits[i] * 100 + digits[j] * 10 + digits[k]
 
-            # Count available digits
-            available = [0] * 10
-            for d in digits:
-                available[d] += 1
+                    if num % 2 == 0:
+                        nums.add(num)
 
-            # Check if enough copies are available
-            possible = True
-
-            for d in range(10):
-                if need[d] > available[d]:
-                    possible = False
-                    break
-
-            if possible:
-                count += 1
-
-        return count
+        return len(nums)
